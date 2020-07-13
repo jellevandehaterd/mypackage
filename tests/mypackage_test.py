@@ -1,11 +1,14 @@
 import logging
 import os
+from os.path import sep
 from pathlib import Path
 
 import pytest
 from _pytest.logging import LogCaptureFixture
 from click.testing import CliRunner
 
+from mypackage import mypackage
+from mypackage.demo.demo import Demo
 from mypackage.mypackage import configure_logging
 from mypackage.mypackage import main
 from tests.helpers import AnyArg
@@ -18,19 +21,37 @@ def chdir_to_tmp_path(tmp_path: Path) -> None:
     os.chdir(str(tmp_path))
 
 
-class TestDemo:
-    def test__demo(self, caplog: LogCaptureFixture) -> None:
+class TestDemoTest:
+    def test__demo__notifies_uses_if_no_input_dir_is_found(
+            self, caplog: LogCaptureFixture
+    ) -> None:
         # Arrange
         runner = CliRunner()
 
-        caplog.set_level(10)
+        caplog.set_level(logging.WARNING)
 
         # Act
-        result = runner.invoke(main, ["demo"])
+        result = runner.invoke(main, ["demo", "test", "input", "output"])
 
         # Assert
+        assert 1 == result.exit_code
+
+        assert "Input file 'input' does not exist" in caplog.messages
+
+    def test_demo_test_creates_valid_output_file(self, tmp_path: Path, input_file: str) -> None:
+        runner = CliRunner()
+        Path(f"{tmp_path}{sep}{input_file}").write_text(mypackage.logo)
+
+        result = runner.invoke(
+            main, ["demo", "test", "./input.txt", ]
+        )
+
         assert 0 == result.exit_code
-        assert "Attempting to demo!" in caplog.messages
+
+        demo = Demo(input_file)
+
+        assert f"{tmp_path}{sep}{input_file}" == str(demo.output_path)
+        assert f"{tmp_path}{sep}output.json" == str(demo.output_path)
 
 
 class TestSetLogLevel:

@@ -1,6 +1,8 @@
 import logging
-
 import click
+from pathlib import Path
+
+from mypackage.demo.demo import Demo
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +34,7 @@ def configure_logging(verbosity: int, quiet: int, json: bool = False) -> None:
 # Menus #
 #########
 
-logo: str = """
+logo: str = r"""
  ______        ______            _                      
 |  ___ \      (_____ \          | |                     
 | | _ | |_   _ _____) )___  ____| |  _ ____  ____  ____ 
@@ -50,7 +52,6 @@ logo: str = """
 def main() -> None:
     """
     Welcome to the MyPackage CLI
-    :return: None
     """
     pass
 
@@ -58,7 +59,7 @@ def main() -> None:
 @main.group()
 def demo() -> None:
     """
-    🔑 Commands related to the demo.
+    Commands related to the demo.
     """
     pass
 
@@ -68,7 +69,6 @@ def demo() -> None:
 @click.argument("output-dir", nargs=1, required=True, type=click.Path())
 @click.option(
     "-v",
-    "--verbose",
     count=True,
     help="Increase logging verbosity",
     default=DEFAULT_VERBOSITY,
@@ -83,3 +83,14 @@ def demo() -> None:
 )
 def test(input_dir: str, output_dir: str, v: int, q: int, o_json: bool) -> None:
     configure_logging(v, q, o_json)
+
+    try:
+        Demo(input_dir, output_dir)
+        exit(0)
+    except Exception as error:
+        logger.critical(error)
+        exit(1)
+
+
+if __name__ == "__main__":
+    main()
