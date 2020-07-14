@@ -1,6 +1,7 @@
 import logging
-import click
 from pathlib import Path
+
+import click
 
 from mypackage.demo.demo import Demo
 
@@ -66,12 +67,9 @@ def demo() -> None:
 
 @demo.command()
 @click.argument("input-dir", nargs=1, required=True, type=click.Path())
-@click.argument("output-dir", nargs=1, required=True, type=click.Path())
+@click.argument("output-dir", nargs=1, required=False, type=click.Path())
 @click.option(
-    "-v",
-    count=True,
-    help="Increase logging verbosity",
-    default=DEFAULT_VERBOSITY,
+    "-v", count=True, help="Increase logging verbosity", default=DEFAULT_VERBOSITY,
 )
 @click.option("-q", count=True, help="Decrease logging verbosity", default=0)
 @click.option(

@@ -2,6 +2,7 @@ import json
 import logging
 from os.path import sep
 from pathlib import Path
+
 logger = logging.getLogger(__name__)
 
 
@@ -27,6 +28,7 @@ class Demo:
     """
     A class that represents a Demo.
     """
+
     input_path: Path
     output_path: Path
 
@@ -51,4 +53,3 @@ class Demo:
         if not self.output_path.is_file():
             logger.error(f"Output file '{output_path}' does not exist")
             raise DemoOutputFileDoesNotExistException(output_path)
-

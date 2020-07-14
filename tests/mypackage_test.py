@@ -23,7 +23,7 @@ def chdir_to_tmp_path(tmp_path: Path) -> None:
 
 class TestDemoTest:
     def test__demo__notifies_uses_if_no_input_dir_is_found(
-            self, caplog: LogCaptureFixture
+        self, caplog: LogCaptureFixture
     ) -> None:
         # Arrange
         runner = CliRunner()
@@ -38,19 +38,21 @@ class TestDemoTest:
 
         assert "Input file 'input' does not exist" in caplog.messages
 
-    def test_demo_test_creates_valid_output_file(self, tmp_path: Path, input_file: str) -> None:
+    @pytest.mark.parametrize("input_path", ["input.txt"])
+    def test_demo_test_creates_valid_output_file(
+        self, tmp_path: Path, input_path: str
+    ) -> None:
         runner = CliRunner()
-        Path(f"{tmp_path}{sep}{input_file}").write_text(mypackage.logo)
+        Path(f"{tmp_path}{sep}{input_path}").touch()
+        Path(f"{tmp_path}{sep}{input_path}").write_text(mypackage.logo)
 
-        result = runner.invoke(
-            main, ["demo", "test", "./input.txt", ]
-        )
+        result = runner.invoke(main, ["demo", "test", f".{sep}input.txt"])
 
         assert 0 == result.exit_code
 
-        demo = Demo(input_file)
+        demo = Demo(input_path)
 
-        assert f"{tmp_path}{sep}{input_file}" == str(demo.output_path)
+        assert f"{tmp_path}{sep}{input_path}" == str(demo.input_path)
         assert f"{tmp_path}{sep}output.json" == str(demo.output_path)
 
 
