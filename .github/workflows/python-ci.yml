@@ -1,4 +1,4 @@
-name: Python package
+name: Python CI
 
 on:
   # Trigger the workflow on push or pull request,
@@ -9,25 +9,24 @@ on:
       - feature/*
     tags:
       - 'v*.*.*'
-  pull_request:
-    branches:
+    branches-ignore:
       - master
 
 jobs:
-  build:
+  test:
 
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        python: [3.7, 3.8]
+        python-version: [3.7, 3.8]
 
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python }}
+          python-version: ${{ matrix.python-version }}
       - uses: actions/cache@v1
         with:
           path: ~/.cache/pip
@@ -44,7 +43,26 @@ jobs:
       - name: Upload pytest test results
         uses: actions/upload-artifact@v1
         with:
-          name: pytest-results-${{ matrix.python-version }}
+          name: pytest-results-${{ matrix.python }}
           path: junit/test-results-${{ matrix.python-version }}.xml
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v1
+        with:
+         username: ${{ github.repository_owner }}
+         password: ${{ secrets.GITHUB_TOKEN }}
+         repository: docker.pkg.github.com
+         cache_froms: docker.pkg.github.com:latest,
+         tag_with_ref: true
+         tag_with_sha: true
+         add_git_labels: true
+         push: ${{ startsWith(github.ref, 'refs/tags/') }}
+         build_args: PYTHON_VERSION=3.8
