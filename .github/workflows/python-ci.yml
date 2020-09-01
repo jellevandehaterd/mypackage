@@ -11,40 +11,40 @@ on:
       - 'v*.*.*'
 
 jobs:
-  test:
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        python-version: [3.7, 3.8]
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - uses: actions/cache@v1
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('setup.py') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Install dependencies
-        run: python -m pip install --upgrade pip setuptools wheel
-      - name: Install Tox and any other packages
-        run: pip install tox
-      - name: Run Tox
-        # Run tox using the version of Python in `PATH`
-        run: tox -e py -- junit/test-results-${{ matrix.python-version }}.xml
-      - name: Upload pytest test results
-        uses: actions/upload-artifact@v1
-        with:
-          name: pytest-results-${{ matrix.python }}
-          path: junit/test-results-${{ matrix.python-version }}.xml
-        # Use always() to always run this step to publish test results when there are test failures
-        if: ${{ always() }}
+#  test:
+#
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      matrix:
+#        os: [macos-latest, ubuntu-latest, windows-latest]
+#        python-version: [3.7, 3.8]
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Setup Python
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#      - uses: actions/cache@v1
+#        with:
+#          path: ~/.cache/pip
+#          key: ${{ runner.os }}-pip-${{ hashFiles('setup.py') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pip-
+#      - name: Install dependencies
+#        run: python -m pip install --upgrade pip setuptools wheel
+#      - name: Install Tox and any other packages
+#        run: pip install tox
+#      - name: Run Tox
+#        # Run tox using the version of Python in `PATH`
+#        run: tox -e py -- junit/test-results-${{ matrix.python-version }}.xml
+#      - name: Upload pytest test results
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: pytest-results-${{ matrix.python }}
+#          path: junit/test-results-${{ matrix.python-version }}.xml
+#        # Use always() to always run this step to publish test results when there are test failures
+#        if: ${{ always() }}
 
   docker-build:
     runs-on: ubuntu-latest
@@ -58,7 +58,6 @@ jobs:
          username: ${{ github.repository_owner }}
          password: ${{ secrets.GITHUB_TOKEN }}
          repository: docker.pkg.github.com
-         cache_froms: docker.pkg.github.com:latest,
          tag_with_ref: true
          tag_with_sha: true
          add_git_labels: true
