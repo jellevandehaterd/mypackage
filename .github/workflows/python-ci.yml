@@ -67,4 +67,4 @@ jobs:
 
       - name: Test
         run: |
-          docker run -it -rm --name test_container docker.pkg.github.com/jellevandehaterd/mypackage/mypackage:${GITHUB_REF##*/}
+          docker run -it --rm --name test_container docker.pkg.github.com/jellevandehaterd/mypackage/mypackage:${GITHUB_REF##*/}
