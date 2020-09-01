@@ -9,8 +9,6 @@ on:
       - feature/*
     tags:
       - 'v*.*.*'
-    branches-ignore:
-      - master
 
 jobs:
   test:
