@@ -55,9 +55,10 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v1
         with:
-         username: ${{ github.repository_owner }}
-         password: ${{ secrets.GITHUB_TOKEN }}
-         repository: docker.pkg.github.com
+         username: ${{ github.actor }}
+         password: ${{ secrets.token }}
+         registry: docker.pkg.github.com
+         repository: ${{github.repository}}/mypackage
          tag_with_ref: true
          tag_with_sha: true
          add_git_labels: true
