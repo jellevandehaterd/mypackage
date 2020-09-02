@@ -4,8 +4,10 @@ docs/
 .pytest-cache/
 htmlcov/
 venv/
+.venv/
 .coverage
 azure-pipelines.yaml
 Makefile
 .gitignore
 **/__pycache__/**
+.github
