@@ -58,7 +58,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: ${env.PYTHON_VERSION}
+          python-version: ${env:PYTHON_VERSION}
 
       - name: Install pep517 and twine
         run: python -m pip install pep517 twine
@@ -81,7 +81,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: ${env.PYTHON_VERSION}
+          python-version: ${env:PYTHON_VERSION}
       - name: Install in dev mode
         run: python -m pip install -e .[dev]
       - name: Import package
@@ -103,9 +103,9 @@ jobs:
          repository: ${{github.repository}}/mypackage
          tag_with_ref: true
          add_git_labels: true
-         cache_froms: python:${env.PYTHON_VERSION}-buster,python:${env.PYTHON_VERSION}-slim-buster,docker.pkg.github.com/jellevandehaterd/mypackage/mypackage
+         cache_froms: python:${env:PYTHON_VERSION}-buster,python:${env:PYTHON_VERSION}-slim-buster,docker.pkg.github.com/jellevandehaterd/mypackage/mypackage
          push: ${{ startsWith(github.ref, 'refs/tags/') }}
-         build_args: PYTHON_VERSION=${env.PYTHON_VERSION}
+         build_args: PYTHON_VERSION=${env:PYTHON_VERSION}
 
       - name: Test
         run: |
