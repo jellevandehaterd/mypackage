@@ -24,8 +24,8 @@ jobs:
           repository: ${{github.repository}}/mypackage
           tag_with_ref: true
           add_git_labels: true
-          cache_froms: python:${env:PYTHON_VERSION}-buster,python:${env:PYTHON_VERSION}-slim-buster,docker.pkg.github.com/jellevandehaterd/mypackage/mypackage
-          build_args: PYTHON_VERSION=${env:PYTHON_VERSION}
+          cache_froms: python:${{ env.PYTHON_VERSION }}-buster,python:${{ env.PYTHON_VERSION }}-slim-buster,docker.pkg.github.com/jellevandehaterd/mypackage/mypackage
+          build_args: PYTHON_VERSION=${{ env.PYTHON_VERSION }}
 
   deploy:
     name: Deploy Docker image
