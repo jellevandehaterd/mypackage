@@ -26,10 +26,10 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('setup.py') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
       - name: Install dependencies
@@ -56,10 +56,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        fetch-depth: 0
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-
+      - uses: actions/cache@v2
+          with:
+            path: ~/.cache/pip
+            key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+            restore-keys: |
+              ${{ runner.os }}-pip-
       - name: Install pep517 and twine
         run: python -m pip install pep517 twine
       - name: Build package
@@ -92,6 +98,7 @@ jobs:
     needs: package
     steps:
       - uses: actions/checkout@v2
+        fetch-depth: 0
       - name: Build and push Docker images
         uses: docker/build-push-action@v1
         with:
