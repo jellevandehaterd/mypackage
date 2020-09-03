@@ -13,7 +13,6 @@ jobs:
   docker-build:
     if: contains(github.ref, 'refs/heads/master')
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Build and push Docker images
@@ -30,9 +29,6 @@ jobs:
 
   docker-test:
     if: contains(github.ref, 'refs/heads/master')
-
-    name: Test docker image
-    if: contains(github.event.pull_request.labels.*.name, 'stage')
     runs-on: ubuntu-latest
     needs: docker-build
     steps:
@@ -43,7 +39,8 @@ jobs:
           registry: docker.pkg.github.com
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
+      - name: Test docker image
+        run: |
           docker run --rm --name test_container docker.pkg.github.com/jellevandehaterd/mypackage/mypackage:latest
 
   docker-tag:
