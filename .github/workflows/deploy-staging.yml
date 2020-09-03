@@ -23,15 +23,23 @@ jobs:
           registry: docker.pkg.github.com
           repository: ${{github.repository}}/mypackage
           tag_with_ref: true
+          tag_with_sha: true
           add_git_labels: true
-          cache_froms: python:${{ env.PYTHON_VERSION }}-buster,python:${{ env.PYTHON_VERSION }}-slim-buster,docker.pkg.github.com/jellevandehaterd/mypackage/mypackage
+          cache_froms: python:${{ env.PYTHON_VERSION }}-buster,python:${{ env.PYTHON_VERSION }}-slim-buster,docker.pkg.github.com/jellevandehaterd/mypackage/mypackage:latest
           build_args: PYTHON_VERSION=${{ env.PYTHON_VERSION }}
 
-  deploy:
-    name: Deploy Docker image
-    needs: docker-build
+  docker-test:
+    name: Test docker image
+    if: contains(github.event.pull_request.labels.*.name, 'stage')
     runs-on: ubuntu-latest
 
     steps:
-      - name: Dummy action
-        run: docker ps -a
+      - uses: actions/checkout@v2
+      - name: Login to GitHub Packages Docker Registry
+          uses: docker/login-action@v1
+          with:
+            registry: docker.pkg.github.com
+            username: ${{ github.repository_owner }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          docker run --rm --name test_container docker.pkg.github.com/jellevandehaterd/mypackage/mypackage:sha-${GITHUB_SHA::7}

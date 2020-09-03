@@ -100,11 +100,12 @@ jobs:
          registry: docker.pkg.github.com
          repository: ${{github.repository}}/mypackage
          tag_with_ref: true
+         tag_with_sha: true
          add_git_labels: true
-         cache_froms: python:${{ env.PYTHON_VERSION }}-buster,python:${{ env.PYTHON_VERSION }}-slim-buster,docker.pkg.github.com/jellevandehaterd/mypackage/mypackage
+         cache_froms: python:${{ env.PYTHON_VERSION }}-buster,python:${{ env.PYTHON_VERSION }}-slim-buster,docker.pkg.github.com/jellevandehaterd/mypackage/mypackage:latest
          push: ${{ startsWith(github.ref, 'refs/tags/') }}
          build_args: PYTHON_VERSION=${{ env.PYTHON_VERSION }}
 
       - name: Test
         run: |
-          docker run --rm --name test_container docker.pkg.github.com/jellevandehaterd/mypackage/mypackage:${GITHUB_REF##*/}
+          docker run --rm --name test_container docker.pkg.github.com/jellevandehaterd/mypackage/mypackage:sha-${GITHUB_SHA::7}

@@ -1,5 +1,6 @@
 [build-system]
-requires = ["setuptools>=40.8", "wheel", "setuptools_scm>=1.15"]
+requires = ["setuptools>=46.4.0", "wheel", "setuptools_scm[toml]>=3.4"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
+write_to = "mypackage/version.py"
