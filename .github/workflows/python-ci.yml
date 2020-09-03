@@ -52,6 +52,7 @@ jobs:
 
   package:
     name: Build & verify package
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -82,6 +83,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     name: Verify dev env
+    needs: package
     runs-on: ${{ matrix.os }}
 
     steps:
