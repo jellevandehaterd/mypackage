@@ -1,11 +1,9 @@
 name: Staging deployment
 
 on:
-  push:
-    branches:
-      - master
-    tags:
-      - 'v*.*.*'
+  release:
+    types: [published]
+
 env:
   PYTHON_VERSION: 3.8
 

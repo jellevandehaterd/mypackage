@@ -11,3 +11,4 @@ Makefile
 .gitignore
 **/__pycache__/**
 .github
+mypackage/version.py

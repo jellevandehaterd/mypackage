@@ -9,6 +9,9 @@ on:
       - feature/*
     tags:
       - 'v*.*.*'
+    pull_request:
+      branches:
+        - master
 
 env:
   PYTHON_VERSION: 3.8
@@ -76,6 +79,14 @@ jobs:
         run: ls -l dist
       - name: Check long_description
         run: python -m twine check dist/*
+      - name: Get wheel filename
+        run: |
+          echo ::set-env name=WHEEL_NAME::"${"${$(python -m twine check dist/*)%:*}"##*/}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.WHEEL_NAME }}
+          path: dist/MyPackage-*.whl
+          if-no-files-found: error
 
   install-dev:
     strategy:
@@ -95,7 +106,6 @@ jobs:
         id: pip-cache
         run: |
           echo "::set-output name=dir::$(pip cache dir)"
-
       - name: pip cache
         uses: actions/cache@v2
         with:
@@ -115,6 +125,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - uses: actions/download-artifact@v2
+        id: download
+      - name: Echo download path
+        run: echo ${{steps.download.outputs.download-path}}
       - name: Build and push Docker images
         uses: docker/build-push-action@v1
         with:
