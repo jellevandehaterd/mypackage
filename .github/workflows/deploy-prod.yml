@@ -11,7 +11,7 @@ env:
 
 jobs:
   docker-build:
-    if: contains(github.ref, refs/heads/master)
+    if: contains(github.ref, 'refs/heads/master')
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,7 @@ jobs:
           build_args: PYTHON_VERSION=${{ env.PYTHON_VERSION }}
 
   docker-test:
-    if: contains(github.ref, refs/heads/master)
+    if: contains(github.ref, 'refs/heads/master')
     name: Test docker image
     runs-on: ubuntu-latest
     needs: docker-build
@@ -47,7 +47,7 @@ jobs:
 
   docker-tag:
     name: Tag and push image docker.pkg.github.com/jellevandehaterd/mypackage/mypackage:${GITHUB_REF##*/}
-    if: contains(github.ref, refs/tags)
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
       - name: Login to GitHub Packages Docker Registry
