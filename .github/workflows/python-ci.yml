@@ -81,7 +81,7 @@ jobs:
         run: python -m twine check dist/*
       - name: Get wheel filename
         run: |
-          echo ::set-env name=WHEEL_NAME::"${"${$(python -m twine check dist/*)%:*}"##*/}"
+          echo ::set-env name=WHEEL_NAME::"${"${$(python -m twine check dist/*)%:*}"##*/}")
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ env.WHEEL_NAME }}
