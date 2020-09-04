@@ -79,11 +79,12 @@ jobs:
         run: python -m twine check dist/*
       - name: Get wheel filename
         run: |
-          echo ::set-env name=WHEEL::$(echo dist/MyPackage*.whl)
+          wheel="$(echo dist/MyPackage*.whl)"
+          echo ::set-env name=WHEEL::${wheel##*/}
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.WHEEL##*/ }}
-          path: ${{ env.WHEEL }}
+          name: ${{ env.WHEEL }}
+          path: dist/MyPackage-*.whl
           if-no-files-found: error
 
   install-dev:
