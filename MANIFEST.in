@@ -1,8 +1,19 @@
-include *.rst *.yml *.yaml *.ini LICENSE pyproject.toml conftest.py
-recursive-include src *.typed
-recursive-include docs *.bat
+include LICENSE *.rst *.toml *.yml *.yaml
+graft .github
+
+# Stubs
+include src/attr/py.typed
+recursive-include src *.pyi
+
+# Tests
+include tox.ini .coveragerc conftest.py
+recursive-include tests *.py
+
+# Documentation
+include docs/Makefile docs/docutils.conf docs/requirements.txt
+recursive-include docs/_static *.png
+recursive-include docs/_static *.svg
 recursive-include docs *.py
 recursive-include docs *.rst
-recursive-include docs Makefile
-recursive-include tests *.py
-global-exclude *.pyc
+recursive-include docs *.md
+prune docs/_build

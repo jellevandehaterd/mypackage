@@ -28,8 +28,6 @@ ARG coverage_limit=95
 WORKDIR /usr/src/app
 # Separate commands to enable build cache
 RUN pip install -r tests/requirements.txt --find-links /usr/src/wheels \
- && git config --global user.email "test@example.com" \
- && git config --global user.name "test" \
  && tox -e py
 
 ARG PYTHON_VERSION

@@ -11,3 +11,7 @@ Makefile
 .gitignore
 **/__pycache__/**
 .github
+mypackage/version.py
+MyPackage.egg-info
+dist/
+build/
