@@ -4,7 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
 write_to = "mypackage/version.py"
-version_scheme = "release-branch-semver"
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
 
 [tool.black]
 line-length = 88
